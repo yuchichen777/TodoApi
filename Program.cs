@@ -1,6 +1,9 @@
 
+using AspectCore.Configuration;
+using AspectCore.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Authentication;
+using TodoApi.Interceptor;
 using TodoApi.Models;
 using TodoApi.Repository;
 using TodoApi.Services;
@@ -22,8 +25,15 @@ namespace TodoApi
 
                builder.Services.AddDbContext<DbContext, TodoContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TodoContext")));
 
-               builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-               builder.Services.AddScoped<ITodoService, TodoService>();
+               builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
+               builder.Services.AddTransient<ITodoService, TodoService>();
+
+               builder.Services.ConfigureDynamicProxy(config =>
+               {
+                    config.Interceptors.AddTyped<ServiceInterceptor>(Predicates.ForService("*Service"));
+               });
+
+               builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
                var app = builder.Build();
 
