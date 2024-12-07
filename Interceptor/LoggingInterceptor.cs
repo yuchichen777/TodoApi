@@ -3,10 +3,10 @@ using AspectCore.DynamicProxy;
 
 namespace TodoApi.Interceptor
 {
-     public class ServiceInterceptor : AbstractInterceptorAttribute
+     public class LoggingInterceptor : AbstractInterceptor
      {
           [FromServiceContext]
-          public ILogger<ServiceInterceptor> Logger { get; set; }
+          public ILogger<LoggingInterceptor> Logger { get; set; }
 
           public async override Task Invoke(AspectContext context, AspectDelegate next)
           {

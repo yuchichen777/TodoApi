@@ -30,7 +30,7 @@ namespace TodoApi
 
                builder.Services.ConfigureDynamicProxy(config =>
                {
-                    config.Interceptors.AddTyped<ServiceInterceptor>(Predicates.ForService("*Service"));
+                    config.Interceptors.AddTyped<LoggingInterceptor>(Predicates.ForService("*Service"));
                });
 
                builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
